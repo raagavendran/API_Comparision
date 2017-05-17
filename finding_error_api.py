@@ -29,14 +29,20 @@ for a in list_of_id:
         print "Checking dashboard: "+ str(open_id_data['name'])
         print '_' * 100
         for b in open_id_data['objects']:
-            list_of_users.append(b['data'])
-        for c in list_of_users:
-            print "Checking :" + c
+            #list_of_users.append(b['data'])
+            #for c in list_of_users:
+            print "Checking :" + b['data']
             try:
-                open_final = host + str(c)
+                open_final = host + str(b['data'])
                 open_final_req = cokkie_session.get(open_final)
                 open_final_req.raise_for_status()
                 if (open_final_req.ok):
                     print "status OK"
             except requests.HTTPError as err:
+                print "ids: " + str(b['id'])
                 print "status ERROR"
+                conformation = raw_input('Do you want to unpin the ERROR Dashboard? ')
+                if (conformation == 'yes'):
+                    cokkie_session.patch(open_id,json={"action": "unpin", "objectid":b['id']},headers={'Content-type': 'application/json'})
+
+
